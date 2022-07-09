@@ -23,7 +23,7 @@ pipeline {
                 sh """aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": 0 },{"TargetGroupArn": "${blueARN}", "Weight": 1 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'"""
               }
             }
-            stage('Deploying to getsigneasy 1') {
+            stage('Deploying to Green') {
               steps {
                 sh '''scp -r index.html ec2-user@3.6.126.50:/usr/share/nginx/html/
                 ssh -t ec2-user@3.6.126.50 -p 22 << EOF 
@@ -31,7 +31,7 @@ pipeline {
                 '''
               }
             }
-            stage('Validate and Add GSBlue for testing') {
+            stage('Validate and Add Green for testing') {
               steps {
                 sh """
                 if [ "\$(curl -o /dev/null --silent --head --write-out '%{http_code}' http://3.6.126.50/)" -eq 200 ]
@@ -56,12 +56,12 @@ pipeline {
             }
           }
           stages {
-            stage('Offloading Green') {
+            stage('Offloading Blue') {
               steps {
                 sh """aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": 1 },{"TargetGroupArn": "${blueARN}", "Weight": 0 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'"""
               }
             }
-            stage('Deploying to getsigneasy 1') {
+            stage('Deploying to Blue') {
               steps {
                 sh '''scp -r index.html ec2-user@3.6.126.50:/usr/share/nginx/html/
                 ssh -t ec2-user@3.6.126.50 -p 22 << EOF 
@@ -69,7 +69,7 @@ pipeline {
                 '''
               }
             }
-            stage('Validate and Add GSBlue for testing') {
+            stage('Validate Blue and added to TG') {
               steps {
                 sh """
                 if [ "\$(curl -o /dev/null --silent --head --write-out '%{http_code}' http://3.6.126.50/)" -eq 200 ]
