@@ -63,8 +63,8 @@ pipeline {
             }
             stage('Deploying to Blue') {
               steps {
-                sh '''scp -r index.html ec2-user@3.6.126.50:/usr/share/nginx/html/
-                ssh -t ec2-user@3.6.126.50 -p 22 << EOF 
+                sh '''scp -r index.html ec2-user@3.110.209.118:/usr/share/nginx/html/
+                ssh -t ec2-user@3.110.209.118 -p 22 << EOF 
                 sudo service nginx restart
                 '''
               }
@@ -72,14 +72,14 @@ pipeline {
             stage('Validate Blue and added to TG') {
               steps {
                 sh """
-                if [ "\$(curl -o /dev/null --silent --head --write-out '%{http_code}' http://3.6.126.50/)" -eq 200 ]
+                if [ "\$(curl -o /dev/null --silent --head --write-out '%{http_code}' http://3.110.209.118/)" -eq 200 ]
                 then
                     echo "** BUILD IS SUCCESSFUL **"
-                    curl -I http://3.6.126.50/
+                    curl -I http://3.110.209.118/
                     aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": 1 },{"TargetGroupArn": "${blueARN}", "Weight": 1 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'
                 else
 	                echo "** BUILD IS FAILED ** Health check returned non 200 status code"
-                    curl -I http://3.6.126.50/
+                    curl -I http://3.110.209.118/
                 exit 2
                 fi
                 """
