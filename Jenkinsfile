@@ -10,11 +10,6 @@ pipeline {
     greenARN = 'arn:aws:elasticloadbalancing:ap-south-1:745825563476:targetgroup/Green/1aa96e9ddb6bd5c5'
   }
   stages {
-    stage('Cloning Git') {
-      steps {
-        checkout([$class: 'GitSCM', branches: [[name: "${params.BRANCH_TAG}"]], extensions: [], userRemoteConfigs: [[credentialsId: '7456cebd-f850-4183-b76d-5fcee987797a', url: 'git@github.com:hanu-developer/Articles.git/']]])
-      }
-    }
     stage('Deployment Started') {
       parallel {
         stage('Green') {
