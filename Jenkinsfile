@@ -1,7 +1,6 @@
 pipeline {
   agent any
   parameters {
-    gitParameter defaultValue: 'master', name: 'BRANCH_TAG', type: 'PT_BRANCH_TAG'
     choice (name: 'chooseNode', choices: ['Green', 'Blue'], description: 'Choose which Environment to Deploy: ')
   }
   environment {
@@ -39,7 +38,7 @@ pipeline {
                 then
                     echo "** BUILD IS SUCCESSFUL **"
                     curl -I http://3.6.126.50/
-                    aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${getSigneasyNode1ARN}", "Weight": 1 },{"TargetGroupArn": "${getSigneasyNode2_3ARN}", "Weight": 0 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'
+                    aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": 0 },{"TargetGroupArn": "${blueARN}", "Weight": 1 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'
                 else
 	                echo "** BUILD IS FAILED ** Health check returned non 200 status code"
                     curl -I http://3.6.126.50/
@@ -77,7 +76,7 @@ pipeline {
                 then
                     echo "** BUILD IS SUCCESSFUL **"
                     curl -I http://3.6.126.50/
-                    aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${getSigneasyNode1ARN}", "Weight": 1 },{"TargetGroupArn": "${getSigneasyNode2_3ARN}", "Weight": 0 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'
+                    aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": 1 },{"TargetGroupArn": "${blueARN}", "Weight": 1 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'
                 else
 	                echo "** BUILD IS FAILED ** Health check returned non 200 status code"
                     curl -I http://3.6.126.50/
