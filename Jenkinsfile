@@ -14,7 +14,7 @@ pipeline {
         stage('Green') {
           when {
             expression {
-              params.chooseNode == Green
+              params.chooseNode == 'Green'
             }
           }
           stages {
@@ -52,7 +52,7 @@ pipeline {
         stage('Blue') {
           when {
             expression {
-              params.chooseNode == Blue
+              params.chooseNode == 'Blue'
             }
           }
           stages {
