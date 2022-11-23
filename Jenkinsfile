@@ -63,7 +63,7 @@ pipeline {
             }
             stage('Deploying to Blue') {
               steps {
-                sh '''scp -r index.html ec2-user@3.121.206.104:/usr/share/nginx/html/
+                sh '''scp -r index.html ec2-user@3.121.206.104:/var/www/html/
                 ssh -t ec2-user@3.110.209.118 -p 22 << EOF 
                 sudo systemctl restart httpd
                 '''
