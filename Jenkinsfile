@@ -27,8 +27,7 @@ pipeline {
             }
             stage('Deploying to Green') {
               steps {
-                sh '''scp -r index.html ec2-user@3.126.152.218:/var/www/html/
-                ssh -t ec2-user@3.126.152.218 -p 22 << EOF 
+                sh '''cp index.html /var/www/html/
                 sudo systemctl restart httpd
                 '''
               }
