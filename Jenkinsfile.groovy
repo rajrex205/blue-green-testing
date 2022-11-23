@@ -5,9 +5,9 @@ pipeline {
     choice (name: 'chooseNode', choices: ['Green', 'Blue'], description: 'Choose which Environment to Deploy: ')
   }
   environment {
-    listenerARN = 'arn:aws:elasticloadbalancing:ap-south-1:745825563476:listener/app/blue-green/a201cfaa8896efbc/42dd93cfc6ceb733'
-    blueARN = 'arn:aws:elasticloadbalancing:ap-south-1:745825563476:targetgroup/blue/2e98c824a11a99c8'
-    greenARN = 'arn:aws:elasticloadbalancing:ap-south-1:745825563476:targetgroup/Green/1aa96e9ddb6bd5c5'
+    listenerARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:loadbalancer/app/Bluegreen-deployment/9f9121e8db33df00'
+    blueARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:targetgroup/BlueTG/2a7ed533e4ba29ff'
+    greenARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:targetgroup/GreenTG/7cd0a89181b32ce3'
   }
   stages {
     stage('Cloning Git') {
