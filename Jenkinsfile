@@ -27,7 +27,7 @@ pipeline {
               steps {
                 sh '''scp -r index.html ec2-user@3.126.152.218:/var/www/html/
                 ssh -t ec2-user@3.126.152.218 -p 22 << EOF 
-                sudo service nginx restart
+                sudo systemctl restart httpd
                 '''
               }
             }
@@ -65,7 +65,7 @@ pipeline {
               steps {
                 sh '''scp -r index.html ec2-user@3.121.206.104:/usr/share/nginx/html/
                 ssh -t ec2-user@3.110.209.118 -p 22 << EOF 
-                sudo service nginx restart
+                sudo systemctl restart httpd
                 '''
               }
             }
