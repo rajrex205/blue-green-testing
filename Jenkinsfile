@@ -6,7 +6,7 @@ pipeline {
     choice (name: 'chooseNode', choices: ['Green', 'Blue'], description: 'Choose which Environment to Deploy: ')
   }
   environment {
-    listenerARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:loadbalancer/app/Bluegreen-deployment/9f9121e8db33df00'
+    listenerARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:listener/app/Bluegreen-deployment/9f9121e8db33df00/133d84a04628a583'
     blueARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:targetgroup/BlueTG/2a7ed533e4ba29ff'
     greenARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:targetgroup/GreenTG/7cd0a89181b32ce3'
   }
