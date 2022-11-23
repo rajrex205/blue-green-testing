@@ -1,3 +1,5 @@
+def region= 'eu-central-1'
+
 pipeline {
   agent any
   parameters {
