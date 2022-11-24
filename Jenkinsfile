@@ -64,7 +64,7 @@ pipeline {
             }
             stage('Deploying to Blue') {
               steps {
-                sh '''sudo cp index.html /var/www/html/
+                sh '''sudo scp index.html root@172.10.4.234:/var/www/html/
                 sudo systemctl restart httpd
                 '''
               }
