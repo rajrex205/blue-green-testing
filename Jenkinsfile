@@ -27,7 +27,7 @@ pipeline {
             }
             stage('Deploying to Green') {
               steps {
-                sh '''cp index.html /var/www/html/
+                sh '''sudo cp index.html /var/www/html/
                 sudo systemctl restart httpd
                 '''
               }
@@ -35,14 +35,14 @@ pipeline {
             stage('Validate and Add Green for testing') {
               steps {
                 sh """
-                if [ "\$(curl -o /dev/null --silent --head --write-out '%{http_code}' http://3.126.152.218/)" -eq 200 ]
+                if [ "\$(curl -o /dev/null --silent --head --write-out '%{http_code}' http://3.75.196.205/)" -eq 200 ]
                 then
                     echo "** BUILD IS SUCCESSFUL **"
-                    curl -I http://3.126.152.218/
+                    curl -I http://3.75.196.205/
                     aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": 0 },{"TargetGroupArn": "${blueARN}", "Weight": 1 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'
                 else
 	                echo "** BUILD IS FAILED ** Health check returned non 200 status code"
-                    curl -I http://3.126.152.218/
+                    curl -I http://3.75.196.205/
                 exit 2
                 fi
                 """
@@ -64,8 +64,7 @@ pipeline {
             }
             stage('Deploying to Blue') {
               steps {
-                sh '''scp -r index.html ec2-user@3.121.206.104:/var/www/html/
-                ssh -t ec2-user@3.110.209.118 -p 22 << EOF 
+                sh '''sudo cp index.html /var/www/html/
                 sudo systemctl restart httpd
                 '''
               }
@@ -73,14 +72,14 @@ pipeline {
             stage('Validate Blue and added to TG') {
               steps {
                 sh """
-                if [ "\$(curl -o /dev/null --silent --head --write-out '%{http_code}' http://3.121.206.104/)" -eq 200 ]
+                if [ "\$(curl -o /dev/null --silent --head --write-out '%{http_code}' http://3.67.13.243/)" -eq 200 ]
                 then
                     echo "** BUILD IS SUCCESSFUL **"
-                    curl -I http://3.121.206.104/
+                    curl -I http://3.67.13.243/
                     aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": 1 },{"TargetGroupArn": "${blueARN}", "Weight": 1 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'
                 else
 	                echo "** BUILD IS FAILED ** Health check returned non 200 status code"
-                    curl -I http://3.121.206.104/
+                    curl -I http://3.67.13.243/
                 exit 2
                 fi
                 """
