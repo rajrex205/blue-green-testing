@@ -5,7 +5,7 @@ pipeline {
   agent any
   parameters {
     choice (name: 'chooseNode', choices: ['Green', 'Blue'], description: 'Choose which Environment to Deploy: ')
-    choice (name: 'Blue', choices: ['1', '3', '4', '0'], description: '1=50%,3=75%,4=80%,0=No Traffic NOTE:- IF choseNode is Greenthen Blue choice 1 or 0 ')
+    choice (name: 'Blue', choices: ['1', '3', '4', '0'], description: '1=50%,3=75%,4=80%,0=No Traffic NOTE:- IF choseNode is Green then Blue choice 1 or 0 ')
     choice (name: 'Green', choices: ['1', '3', '4', '0'], description: '1=50%,3=75%,4=80%,0=No Traffic NOTE:- IF choseNode is Blue Then Green choice 1 or 0  ')
   }
   environment {
