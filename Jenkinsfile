@@ -5,8 +5,8 @@ pipeline {
   agent any
   parameters {
     choice (name: 'chooseNode', choices: ['Green', 'Blue'], description: 'Choose which Environment to Deploy: ')
-    choice (name: 'Blue', choices: ['1', '3', '4', '0'], description: '1=50%,3=75%,4=80%,0=No Traffic ')
-    choice (name: 'Green', choices: ['1', '3', '4', '0'], description: '1=50%,3=75%,4=80%,0=No Traffic ')
+    choice (name: 'Blue', choices: ['1', '3', '4', '0'], description: '1=50%,3=75%,4=80%,0=No Traffic NOTE:- IF choseNode is Greenthen Blue choice 1 or 0 ')
+    choice (name: 'Green', choices: ['1', '3', '4', '0'], description: '1=50%,3=75%,4=80%,0=No Traffic NOTE:- IF choseNode is Blue Then Green choice 1 or 0  ')
   }
   environment {
     listenerARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:listener/app/Bluegreen-deployment/9f9121e8db33df00/133d84a04628a583'
