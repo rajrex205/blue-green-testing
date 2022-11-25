@@ -4,6 +4,7 @@ pipeline {
   agent any
   parameters {
     choice (name: 'chooseNode', choices: ['Green', 'Blue'], description: 'Choose which Environment to Deploy: ')
+    choice (name: 'weight', choices: ['50Blue-50Green', '80Blue-20Green', '100Blue-0Green','50Green-50Blue', '80Green-20Blue', '100Geen-0Blue'], description: 'Choose weight to Deploy each Environment: ')
   }
   environment {
     listenerARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:listener/app/Bluegreen-deployment/9f9121e8db33df00/133d84a04628a583'
