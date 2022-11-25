@@ -1,10 +1,12 @@
 def region= 'eu-central-1'
 
+
 pipeline {
   agent any
   parameters {
     choice (name: 'chooseNode', choices: ['Green', 'Blue'], description: 'Choose which Environment to Deploy: ')
-    choice (name: 'weight', choices: ['50Blue-50Green', '80Blue-20Green', '100Blue-0Green','50Green-50Blue', '80Green-20Blue', '100Geen-0Blue'], description: 'Choose weight to Deploy each Environment: ')
+    choice (name: 'Blue', choices: ['10', '20', '30', '50', '100'], description: 'Choose weight to Deploy each Environment: ')
+    choice (name: 'Green', choices: ['10', '20', '30', '50', '100'], description: 'Choose weight to Deploy each Environment: ')
   }
   environment {
     listenerARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:listener/app/Bluegreen-deployment/9f9121e8db33df00/133d84a04628a583'
@@ -23,7 +25,7 @@ pipeline {
           stages {
             stage('Offloading Green') {
               steps {
-                sh """aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": 0 },{"TargetGroupArn": "${blueARN}", "Weight": 1 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'"""
+                sh """aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": "${params.Green}" },{"TargetGroupArn": "${blueARN}", "Weight": "${params.Blue}" }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'"""
               }
             }
             stage('Deploying to Green') {
@@ -40,7 +42,7 @@ pipeline {
                 then
                     echo "** BUILD IS SUCCESSFUL **"
                     curl -I http://3.75.196.205/
-                    aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": 1 },{"TargetGroupArn": "${blueARN}", "Weight": 0 }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'
+                    aws elbv2 modify-listener --listener-arn ${listenerARN} --default-actions '[{"Type": "forward","Order": 1,"ForwardConfig": {"TargetGroups": [{"TargetGroupArn": "${greenARN}", "Weight": "${params.Green}" },{"TargetGroupArn": "${blueARN}", "Weight": "${params.Blue}" }],"TargetGroupStickinessConfig": {"Enabled": true,"DurationSeconds": 1}}}]'
                 else
 	                echo "** BUILD IS FAILED ** Health check returned non 200 status code"
                     curl -I http://3.75.196.205/
