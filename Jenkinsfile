@@ -6,7 +6,7 @@ pipeline {
   parameters {
     choice (name: 'chooseNode', choices: ['Green', 'Blue'], description: 'Choose which Environment to Deploy: ')
     choice (name: 'Blue', choices: ['10', '20', '30', '50', '100'], description: 'Choose weight to Deploy each Environment: ')
-    choice (name: 'Green', choices: ['10', '20', '30', '50', '100'], description: 'Choose weight to Deploy each Environment: ')
+    choice (name: 'Green', choices: ['90', '80', '70', '50', '0'], description: 'Choose weight to Deploy each Environment: ')
   }
   environment {
     listenerARN = 'arn:aws:elasticloadbalancing:eu-central-1:823351923123:listener/app/Bluegreen-deployment/9f9121e8db33df00/133d84a04628a583'
